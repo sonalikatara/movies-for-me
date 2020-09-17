@@ -1,4 +1,5 @@
 import React from "react";
+import Ratings from "./Ratings";
 
 class Movie extends React.Component {
   render() {
@@ -16,7 +17,7 @@ class Movie extends React.Component {
           <div ><span className="Movie-title">{movie.title} </span>  {movie.release_date && movie.release_date.slice(0, 4)}</div>
           {/*<div>{movie.genre_ids.join(",")}</div>*/}
           <div>
-           <b> Votes</b> {movie.vote_average}
+            <Ratings rating={movie.rating}/>
           </div>
           <div> {movie.overview && `${movie.overview.slice(0, 80)}...`}</div>
         </div>
