@@ -15,13 +15,12 @@ const SearchContainer = styled.div`
 
  const StyledInfiniteScroll = styled(InfiniteScroll)`
     display: flex;
+    align-items: flex-start;
     width: 98%;
     flex-wrap: wrap;
     height: 90%;
-   justify-content: space-around;
+    justify-content: space-around;
     flex-wrap: wrap;
-    align-self: center;
-    width: 98%;
     max-width: 1200px;
     min-height: 700px;
     overflow:auto; 
