@@ -1,11 +1,14 @@
 import React from 'react';
+import MovieList from './MovieList';
+import Footer from './Footer';
 
 import './App.css';
-import MovieList from './MovieList';
+
 function App() {
   return (
-    <div className="App">
+    <div className="App"  aria-label="Movie search Application">
       <MovieList />
+      <Footer />
     </div>
   );
 }
