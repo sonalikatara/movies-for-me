@@ -18,7 +18,7 @@ class Movie extends React.Component {
           <div>
            <b> Votes</b> {movie.vote_average}
           </div>
-          <div> {`${movie.overview.slice(0, 80)}...`}</div>
+          <div> {movie.overview && `${movie.overview.slice(0, 80)}...`}</div>
         </div>
       </div>
     );

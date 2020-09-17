@@ -5,8 +5,8 @@
   margin:auto;
   max-width: 1200px;
   background-color: #F7F7F7;
+  min-height: 100%;
 }
-
 
 .Movie {
   font-weight: 400;
