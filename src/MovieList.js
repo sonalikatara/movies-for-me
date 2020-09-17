@@ -11,8 +11,7 @@ const SearchContainer = styled.div`
    margin-top: 16px;
 `
 
- 
-const MovieListContainer = styled.div`
+ const MovieListContainer = styled.div`
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
@@ -23,8 +22,7 @@ const MovieListContainer = styled.div`
     overflow:auto;
     margin: auto; 
     /*background-color:red;    */
-    `
-  
+    ` 
 const MovieListHeader = styled.div`
     background-color: #FFFFFF;
     padding-bottom: 16px;
@@ -41,6 +39,9 @@ class MovieList extends React.Component {
       movies: JSON.parse(window.localStorage.getItem("popularMovies") || "[]"),
       pageNumber: 0,
       query: '',
+      loading: true,
+      hasMore: false, // has more results
+      error: false,
     };
 }
 
@@ -49,68 +50,83 @@ componentDidMount() {
 }
 
 async getPopularMovies(){
-  const popularMoviesUrl =API_URL_POPULAR_MOVIES;
-  let response = await axios.get(popularMoviesUrl);
-  let popularMovies = response.data;
-  this.setState({ movies: popularMovies });
-   // store the Movies in local storage
-   window.localStorage.setItem("popularMovies", JSON.stringify(popularMovies));
+  try{
+      const popularMoviesUrl =API_URL_POPULAR_MOVIES;
+      let response = await axios.get(popularMoviesUrl);
+      let popularMovies = response.data;
+      if (popularMovies.length >0){
+        this.setState(
+        st => ({ 
+          movies: st.pageNumber > 1 ?[...st.movies, ...popularMovies]: popularMovies,
+          loading: false,
+          hasMore: popularMovies.length > 0,
+        })
+        );  
+      }
+      // store the Movies in local storage
+      window.localStorage.setItem("popularMovies", JSON.stringify(this.state.movies)) 
+  } catch(error){
+    this.setState({ 
+                    movies: JSON.parse(window.localStorage.getItem("popularMovies") || "[]"), 
+                    pageNumber: 0,
+                  });
+    console.log(error) // toDO : set state error
+    return;
+   };  
+ 
+    
 }
 
-
-
 async getSearchedMovies(){
-  
   //Check if there are any previous pending requests
   if(typeof cancelToken != typeof undefined){
     cancelToken.cancel("canceled as there is new request");
   }
-
   //Save the cancel token for the current request
   cancelToken = axios.CancelToken.source();
   const searchUrl =API_URL_SEARCH+"?query="+this.state.query+"&page="+this.state.pageNumber;
   try{
-  const response = await axios.get(
+    const response = await axios.get(
     searchUrl,
     {cancelToken: cancelToken.token}
-  );
- 
-  let movies = response.data;
-  this.setState({ movies: movies });
-    // store the Movies in local storage
-  window.localStorage.setItem("movies", JSON.stringify(movies));
+    );
+    let movies = response.data;
+    this.setState({ movies: movies, loading: false });
   } catch(error){
-   console.log(error)
+   console.log(error) // toDO : set state error
    return;
   };  
 };
 
- handleSearch = async (e) =>{
+handleSearch = async (e) =>{
   const query = e.target.value;
-
-   if( query.length > 0){
+  if( query.length > 0){
      console.log("setState",query);
-    await this.setState({query: e.target.value, pageNumber: 1});
+     await this.setState({query: e.target.value, pageNumber: 1, loading: true});
      this.getSearchedMovies();
-   } else{
+  } else{
+    console.log("fetch popular",query);
+    await this.setState({ pageNumber: 1, loading: true});
      this.getPopularMovies();
-   }
+  }
 };
 
-render() {
-      
-    return (
+render() {     
+  return (
     <>
-        <MovieListHeader>
-            <h1>What to watch</h1>
-            <h4>Recomendations from us ..</h4>
-        </MovieListHeader>
-        <SearchContainer><input type="text" placeholder="Search" onChange={this.handleSearch}/></SearchContainer> 
-        <MovieListContainer>
+      <MovieListHeader>
+          <h1>What to watch</h1>
+          <h4>Recomendations from us ..</h4>
+      </MovieListHeader>
+      <SearchContainer>
+        <input type="text" placeholder="Search" onChange={this.handleSearch}/>
+      </SearchContainer> 
+      {this.state.movies.length>0 &&  <MovieListContainer>
         {this.state.movies.map((movie) => (
             <Movie key={movie.id} movie={movie} />
         ))}
-        </MovieListContainer>
+      </MovieListContainer>}
+      <div>{this.state.loading && "Loading..."}</div>
     </>
     );
   }
