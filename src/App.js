@@ -3,16 +3,18 @@ import MovieList from './MovieList';
 import MovieDetails from './MovieDetails';
 import DisneyMovies from './DisneyMovies';
 import Footer from './Footer';
-import { Route, Switch } from 'react-router-dom';
+import Navbar from './Navbar';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import './App.css';
 
 function App() {
   return (
-    <div className="App"  aria-label="Movie search Application">
+    <div className="App" >
+        <Navbar className="navbar" />
         <Switch>
-          <Route exact path="/movie/:id" render={ props => <MovieDetails id={ props.match.params.id} />} />
-          <Route exact path= "/disneyMovies" render={()=> <DisneyMovies />} />
-          <Route exact path= "/" render={()=> <MovieList />} />
+          <Route exact path= "/" render={ props => <MovieList history={props.history}/>} />
+          <Route  exact path= "/disneyMovies" render={ props=> <DisneyMovies history={props.history}/>} />        
+          <Route  path="/movie/:id" render={ props => <MovieDetails id={props.match.params.id} history={props.history}/>} />         
           <Route render={()=> <h1>PAGE NOT FOUND !!!</h1>}/>
         </Switch>
         <Footer />
@@ -20,4 +22,4 @@ function App() {
   );
 }
 
-export default App;
+export default withRouter(App);

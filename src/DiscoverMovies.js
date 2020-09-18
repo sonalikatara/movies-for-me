@@ -1,7 +1,8 @@
 import React from 'react';
+import {withRouter} from "react-router-dom";
 import Movie from "./Movie";
-
 import styled from 'styled-components';
+
 
 const StyledMoviesDiv = styled.div`
                                 display: flex;
@@ -17,13 +18,23 @@ const StyledMoviesDiv = styled.div`
                                 margin: auto; 
                                 margin-bottom: 16px;
                             ` 
-export default function DiscoverMovies(props){
-    let {movies } = props;
+
+class DiscoverMovies extends React.Component {
+   
+    goToMovieDetails = (id) => {
+        this.props.history.push(`/movie/${id}`);
+    }
+
+  render(){
+    let {movies, history } = this.props;
     return(
         <StyledMoviesDiv>
          {movies.map((movie) => (
-            <Movie key={movie.id} movie={movie} />
+            <Movie key={movie.id} movie={movie} history={history} handleClick={()=>this.goToMovieDetails(movie.id)}  />
         ))}
         </StyledMoviesDiv>
     )
+  } 
+    
 }
+export default withRouter(DiscoverMovies);

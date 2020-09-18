@@ -1,4 +1,5 @@
 import React from "react";
+import {withRouter} from "react-router-dom";
 import Movie from "./Movie";
 import axios from "axios";
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -9,9 +10,6 @@ import styled from 'styled-components';
 const API_URL_POPULAR_MOVIES = "http://localhost:9000/movies?page=";
 const API_URL_SEARCH = "http://localhost:9000/search";
 
-const SearchContainer = styled.div`
-   margin-top: 16px;
-`
 const StyledInfiniteScroll = styled(InfiniteScroll)`
     display: flex;
     align-items: flex-start;
@@ -35,7 +33,7 @@ class MovieList extends React.Component {
     super(props);
     this.state = {
       movies: JSON.parse(window.localStorage.getItem("popularMovies") || "[]"),
-      pageNumber: window.localStorage.getItem("popularMovies").length>0?1:0,
+      pageNumber: window.localStorage.getItem("popularMovies") ? window.localStorage.getItem("popularMovies").length >0 ? 1: 0 : 0,
       query: '',
       loading: true,
       hasMore: false, // has more results
@@ -48,7 +46,7 @@ componentDidMount() {
 }
 
 async getPopularMovies(){
-  console.log(" get Popular Movies ",this.state.pageNumber +1)
+ 
   try{
       let pageNumber = this.state.pageNumber +1; 
       const popularMoviesUrl =API_URL_POPULAR_MOVIES+pageNumber;
@@ -111,10 +109,8 @@ async getSearchedMovies(){
 handleSearch = async (e) =>{
   const query = e.target.value;
   if( query.length > 0){
-     console.log("setState",query);
      await this.setState({query: e.target.value, pageNumber: 0 ,movies: [], loading: true});
   } else{
-    console.log("fetch popular",query);
     await this.setState({ query: null, pageNumber: 0, movies: [],loading: true});
   }
   this.fetchMoreMovies();
@@ -129,13 +125,17 @@ fetchMoreMovies = () =>{
   }
 }
 
+goToMovieDetails = (id) => {
+  this.props.history.push(`/movie/${id}`);
+}
+
 render() {     
   return (
     <>
       <MovieListHeader />
-      <SearchContainer>
-        <input type="text" placeholder="Search" onChange={this.handleSearch}/>
-      </SearchContainer> 
+      <div className="p-2 ">
+        <input   type="text" placeholder="Search" onChange={this.handleSearch}/>
+      </div> 
       <StyledInfiniteScroll
          dataLength={this.state.movies.length}
          next={this.fetchMoreMovies}
@@ -152,11 +152,11 @@ render() {
           }
        >
         {this.state.movies.map((movie) => (
-            <Movie key={movie.id} movie={movie} />
+            <Movie  key={movie.id} movie={movie} handleClick={()=>this.goToMovieDetails(movie.id)} history={this.props.history}/>
         ))}
        </StyledInfiniteScroll>
     </>
     );
   }
 }
-export default MovieList;
+export default withRouter(MovieList);

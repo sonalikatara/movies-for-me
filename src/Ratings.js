@@ -6,7 +6,7 @@ export default function Ratings(props){
     for(; i < props.rating; i++) {
         stars.push(<span className='fa fa-star Ratings-checked' key={'i'+i} > </span>)
     }
-    props.rating === 0 && stars.push(<span className='Ratings-checked'> No Ratings yet</span>)
+    props.rating === 0 && stars.push(<span key={'i'} className='Ratings-checked'> No Ratings yet</span>)
     return (
     <div >
        {stars}
