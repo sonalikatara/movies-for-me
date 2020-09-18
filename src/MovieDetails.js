@@ -1,5 +1,9 @@
 import React from "react";
+import {withRouter} from "react-router-dom";
 import Ratings from "./Ratings";
+import DiscoverMovies from "./DiscoverMovies";
+
+
 import axios from "axios";
 
 const API_URL_MOVIE = "http://localhost:9000/movie?id=";
@@ -24,8 +28,9 @@ class MovieDetails extends React.Component{
             console.log("error in fetching movie: " ,error); // should be logged for reference
         }       
     }
+    
     render(){
-        let {title,backdrop_path,runtime,genres,release_date,homepage,original_language,overview,rating,vote_count, status,production_countries,production_companies} = this.state.movie;
+        let {title,backdrop_path,runtime,genres,release_date,homepage,original_language,overview,rating,vote_count, status,production_countries,production_companies,similar_movies} = this.state.movie;
         let date = new Date(release_date);
         date = date.toDateString().slice(4);
 
@@ -33,15 +38,15 @@ class MovieDetails extends React.Component{
         dataMap.set("genres", JSON.stringify(genres));
         dataMap.set("productionCountries", JSON.stringify(production_countries));
         dataMap.set("productionCompanies", JSON.stringify(production_companies));
+        dataMap.set("similarMovies", JSON.stringify(similar_movies));
 
         let allGenres = JSON.parse(dataMap.get("genres") || "[]");
         let allProdCountries = JSON.parse(dataMap.get("productionCountries") || "[]" );
         let allProdCompanies = JSON.parse(dataMap.get("productionCompanies") || "[]" );
-
-
+        let allSimilarMovies = JSON.parse(dataMap.get("similarMovies") || "[]" );
         
         return(
-            <div className="row" style={{height:'1200px'}}>
+            <div className="row" style={{height:'100%'}}>
                 <div className="col">  
                     <div className="row">
                         <div className="col">
@@ -50,8 +55,8 @@ class MovieDetails extends React.Component{
                         </div>
                      </div>
                      <div className="row p-4">
-                         <div calssName="col">
-                         <h2 className="display-4"> {title}</h2>
+                         <div className="col">
+                         <h2 className="display-4"> {title}</h2> 
                      <div className="row p-2">
                         <div className="col sm-3"><Ratings rating={rating } /> ({vote_count})</div>
                         <div className="col sm-3">{runtime} min</div>
@@ -67,20 +72,27 @@ class MovieDetails extends React.Component{
                         <div className="col sm-3"><a href={homepage} target="new">Webpage</a></div>   
                      </div>
                      <div className="row p-2 text-left">
-                     <div className="col">Genres: <b>  {allGenres.map(g=><span>{g.name}, </span>)}</b> </div>
+                        <div className="col">Genres: <b>  {allGenres.map(g=><span key={g.name}>{g.name}, </span>)}</b> </div>
+                        </div> 
+                     <div className="row p-2 text-left">
+                        <div className="col">
+                            Production Companies: <b>  {allProdCompanies.map(p=><span key={p.name}>{p.name}, </span>)} </b>
+                        </div>
                      </div> 
                      <div className="row p-2 text-left">
-                     <div className="col">
-                         Production Companies: <b>  {allProdCompanies.map(p=><span>{p.name}, </span>)} </b>
-                     </div>
+                        <div className="col">
+                            Production Countries: <b> {allProdCountries.map(p=><span key={p.name}>{p.name}, </span>)} </b>
+                        </div>
                      </div> 
                      <div className="row p-2 text-left">
-                     <div className="col">
-                         Production Countries: <b> {allProdCountries.map(p=><span>{p.name}, </span>)} </b>
-                     </div>
+                        <div className="col">
+                            <div className=" p-3"></div>
+                            <h4 className="display-6 ">{allSimilarMovies.length>0 ? `Similar Movies Recomendations` : ` Sorry don't have similar movies for ${title}`} </h4>
+                            <div className=" p-3"></div>
+                            {allSimilarMovies.length>0 && <DiscoverMovies movies={allSimilarMovies} history={this.props.history}/> }
+                        </div>
                      </div> 
-
-                         </div>
+                    </div>
                      </div>
                      
                 </div>
@@ -89,4 +101,4 @@ class MovieDetails extends React.Component{
     }
 }
 
-export default MovieDetails
+export default withRouter(MovieDetails);

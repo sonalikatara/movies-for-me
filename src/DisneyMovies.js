@@ -1,6 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-
 import DiscoverMovies from "./DiscoverMovies";
 import axios from "axios";
 
@@ -19,7 +17,6 @@ class DisneyMovies extends React.Component {
     }
 
     async getDisneyMovies(){
-        console.log(" get disney Movies ")
         try{
             
             const disneyMoviesUrl = API_URL_DISNEY_MOVIES;
@@ -48,8 +45,11 @@ class DisneyMovies extends React.Component {
     render() {
       return (
         <>
-        DISNEY MOvies
-          <DiscoverMovies movies={this.state.movies} />
+          <div className=" p-3">
+            <h2 className="display-5"> WALT DISNEY MOVIES °o°</h2>
+            <h4 className="display-7">Recomendations from us ..</h4>
+          </div>
+          <DiscoverMovies movies={this.state.movies} historu={this.props.history} />
         </>
       );
     }

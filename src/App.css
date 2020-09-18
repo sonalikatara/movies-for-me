@@ -8,6 +8,9 @@
   min-height: 100%;
 }
 
+.searchBox {
+  max-width: "250px";
+}
 .Movie {
   font-weight: 400;
   font-size: 16px;
@@ -21,6 +24,10 @@
   padding: 0px;
   box-shadow: 7px 10px 12px -7px;
 }
+.Movie:hover {
+  cursor: pointer;
+}
+
 
 .Movie-details {
   margin: 4px;
