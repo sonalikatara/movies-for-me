@@ -12,8 +12,7 @@ const API_URL_SEARCH = "http://localhost:9000/search";
 const SearchContainer = styled.div`
    margin-top: 16px;
 `
-
- const StyledInfiniteScroll = styled(InfiniteScroll)`
+const StyledInfiniteScroll = styled(InfiniteScroll)`
     display: flex;
     align-items: flex-start;
     width: 98%;
@@ -27,8 +26,6 @@ const SearchContainer = styled.div`
     margin: auto; 
     margin-bottom: 16px;
     ` 
-
- 
 let cancelToken;
 
 /** To DO : create a seperate component for search */
