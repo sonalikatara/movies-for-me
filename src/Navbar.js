@@ -7,6 +7,7 @@ export default class Navbar extends Component{
             <>
             <div className="navbar p-3">
                 <NavLink className="navbar-brand" to="/">Home</NavLink>
+                <NavLink className="nav-link"  to="/animationMovies"> Animation Movies</NavLink>
                 <NavLink className="nav-link"  to="/disneyMovies"> Walt Disney Movies</NavLink>
             </div>
            
