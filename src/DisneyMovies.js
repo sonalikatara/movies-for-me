@@ -2,7 +2,8 @@ import React from "react";
 import DiscoverMovies from "./DiscoverMovies";
 import axios from "axios";
 
-const API_URL_DISNEY_MOVIES = "http://localhost:9000/discover?query=with_company&queryValue=Walt%20Disney%20Pictures";
+///walt disney company id is  2
+const API_URL_DISNEY_MOVIES = "http://localhost:9000/discover?query=with_companies&queryValue=2";
 
 class DisneyMovies extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class DisneyMovies extends React.Component {
               })
               );  
               // store the Movies in local storage
-              window.localStorage.setItem("disneyMovies", JSON.stringify(this.state.movies))
+              window.localStorage.setItem("disneyMovies", JSON.stringify( disneyMovies))
             }
              
         } catch(error){
@@ -49,7 +50,7 @@ class DisneyMovies extends React.Component {
             <h2 className="display-5"> WALT DISNEY MOVIES °o°</h2>
             <h4 className="display-7">Recomendations from us ..</h4>
           </div>
-          <DiscoverMovies movies={this.state.movies} historu={this.props.history} />
+          <DiscoverMovies movies={this.state.movies} history={this.props.history} />
         </>
       );
     }
